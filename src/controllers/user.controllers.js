@@ -78,10 +78,7 @@ const loginUser = asyncHandler(async (req, res) => {
 })
 
 const isUserAuthenticated = asyncHandler(async (req, res) => {
-  const token = req.cookies.token
-  if (!token) {
-    throw new ApiError(401, 'Unauthorized')
-  }
+  const userId = req.userId
 
   const user = await User.findById(token.userId)
   if (!user) {

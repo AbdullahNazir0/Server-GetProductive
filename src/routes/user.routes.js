@@ -15,7 +15,7 @@ import {
 
 router.route('/register').post(registerUser)
 router.route('/login').post(loginUser)
-router.route('/status').get(isUserAuthenticated)
+router.route('/status').get(verifyJwt, isUserAuthenticated)
 router.route('/logout').post(logoutUser)
 router.route('/:id/update').post(verifyJwt, updateUser)
 router.route('/:id/reset-password').post(verifyJwt, resetPassword)
