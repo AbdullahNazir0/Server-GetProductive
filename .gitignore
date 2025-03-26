@@ -1,0 +1,33 @@
+# Node modules
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Environment variables
+.env
+
+# Logs
+logs/
+*.log
+debug.log
+error.log
+
+# Dependency directories
+dist/
+build/
+
+# Temporary files
+*.tmp
+*.cache
+.DS_Store
+Thumbs.db
+
+# VS Code and JetBrains IDEs
+.vscode/
+.idea/
+
+# Process managers (PM2 logs)
+pm2/logs/
+
+# Coverage reports
+coverage/
