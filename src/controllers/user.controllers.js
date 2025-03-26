@@ -173,6 +173,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 export {
   registerUser,
   loginUser,
+  isUserAuthenticated,
   logoutUser,
   updateUser,
   resetPassword,
