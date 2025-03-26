@@ -4,6 +4,8 @@ import { verifyJwt } from '../middlewares/auth.middleware.js'
 const router = Router()
 
 import {
+  getHomeTasks,
+  getAllTasks,
   getTasks,
   getTaskById,
   createTask,
@@ -14,6 +16,10 @@ import {
 router.route('/')
   .get(verifyJwt, getTasks)
   .post(verifyJwt, createTask)
+router.route('/home')
+  .get(verifyJwt, getHomeTasks)
+router.route('/all')
+  .get(verifyJwt, getAllTasks)
 router.route('/:id')
   .get(verifyJwt, getTaskById)
   .put(verifyJwt, updateTask)

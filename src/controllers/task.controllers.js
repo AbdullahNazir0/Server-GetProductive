@@ -2,6 +2,8 @@ import { asyncHandler } from '../utils/asyncHandler.js'
 import { ApiResponse } from '../utils/ApiResponse.js'
 import { ApiError } from '../utils/ApiError.js'
 import { Task } from '../models/task.model.js'
+import moment from 'moment'
+import mongoose from 'mongoose'
 
 const createTask = asyncHandler(async (req, res) => {
   const { title, description, deadline, priority } = req.body
@@ -12,7 +14,7 @@ const createTask = asyncHandler(async (req, res) => {
   }
 
   try {
-    const createdTask = await Task.create({
+    await Task.create({
       title,
       description,
       deadline,
@@ -22,11 +24,47 @@ const createTask = asyncHandler(async (req, res) => {
   } catch(error) {
     console.log(error)
   }
-  // if (!createdTask) {
-  //   throw new ApiError(500, 'Failed to create task')
-  // }
 
   res.status(201).json(new ApiResponse(201, 'createdTask', 'Task created successfully'))
+})
+
+const getHomeTasks = asyncHandler(async (req, res) => {
+  const id = new mongoose.Types.ObjectId(req.userId)
+
+  const today = moment().startOf("day").toDate()
+  const tasks = await Task.find({
+    userId: id,
+    $or: [
+      { createdAt: { $gte: today } },
+      { isDone: false, createdAt: { $lt: today } }
+    ]
+  }).sort({ createdAt: 1 })
+
+  res.status(200).json(new ApiResponse(200, tasks, 'Home Tasks retrieved successfully'))
+})
+
+const getAllTasks = asyncHandler(async (req, res) => {
+  const id = req.userId
+
+  const tasks = await Task.aggregate([
+    {
+      $match: { userId: userId }
+    },
+    {
+      $group: {
+        _id: { $dateToString: { format: "%d-%m-%Y", date: "$createdAt" } },
+        tasks: { $push: "$$ROOT" },
+      }
+    },
+    {
+      $sort: { _id: 1 }
+    }
+  ])
+  if (!tasks) {
+    throw new ApiError(404, 'Tasks not found')
+  }
+
+  res.status(200).json(new ApiResponse(200, tasks, 'Tasks retrieved successfully'))
 })
 
 const getTasks = asyncHandler(async (req, res) => {
@@ -96,6 +134,8 @@ const deleteTask = asyncHandler(async (req, res) => {
 })
 
 export {
+  getHomeTasks,
+  getAllTasks,
   getTasks,
   getTaskById,
   createTask,
