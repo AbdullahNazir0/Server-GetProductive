@@ -48,7 +48,7 @@ const getAllTasks = asyncHandler(async (req, res) => {
 
   const tasks = await Task.aggregate([
     {
-      $match: { userId: userId }
+      $match: { userId: id }
     },
     {
       $group: {
