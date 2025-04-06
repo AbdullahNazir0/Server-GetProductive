@@ -52,7 +52,7 @@ const getAllTasks = asyncHandler(async (req, res) => {
     },
     {
       $group: {
-        _id: { $dateToString: { format: "%d-%m-%Y", date: "$createdAt" } },
+        _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
         tasks: { $push: "$$ROOT" },
       }
     },
